@@ -11,25 +11,31 @@ import {
 import axios from 'axios';
 
 import {
-    createUser,
-    requestOneTimePassword,
+    verifyOneTimePassword,
 } from '../api';
 
-export default class SignUpForm extends React.Component {
+export default class SignInForm extends React.Component {
     state = {
         phone: '',
+        code: '',
     };
     
     setPhone = (phone) => {
         this.setState({ phone });
     }
     
+    setCode = (code) => {
+        this.setState({ code });
+    }
+    
     handleSubmit = async () => {
-        const { phone } = this.state;
+        const {
+            phone,
+            code,
+        } = this.state;
         
         try {
-            await axios.post(createUser, { phone });
-            await axios.post(requestOneTimePassword, { phone });
+            await axios.post(verifyOneTimePassword, { phone, code });
         } catch (e) {
             console.log(e);
         }
@@ -45,8 +51,16 @@ export default class SignUpForm extends React.Component {
                         onChangeText={this.setPhone}
                     />
                 </View>
+                <View style={{ marginBottom: 10 }}>
+                    <FormLabel>Enter Code</FormLabel>
+                    <FormInput
+                        value={this.state.code}
+                        onChangeText={this.setCode}
+                    />
+                </View>
+                
                 <Button
-                    title="Get code"
+                    title="Verify code"
                     onPress={this.handleSubmit}
                 />
             </View>
