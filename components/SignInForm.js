@@ -9,6 +9,7 @@ import {
     FormInput,
 } from 'react-native-elements';
 import axios from 'axios';
+import firebase from 'firebase';
 
 import {
     verifyOneTimePassword,
@@ -35,7 +36,10 @@ export default class SignInForm extends React.Component {
         } = this.state;
         
         try {
-            await axios.post(verifyOneTimePassword, { phone, code });
+            let { data } = await axios.post(verifyOneTimePassword, { phone, code });
+            
+            // Authenticate user
+            firebase.auth().signInWithCustomToken(data.token);
         } catch (e) {
             console.log(e);
         }
